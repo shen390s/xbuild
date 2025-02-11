@@ -31,7 +31,7 @@ int main(int argc,char *argv[]) {
 
     readlink("/proc/self/exe",
 	     mypath,sizeof(mypath) - 1);
-    appdir = mypath;
+    appdir = dirname(mypath);
     printf("appdir: %s\n", appdir);
     
     sprintf(pathenv,"PATH=%s:%s",
