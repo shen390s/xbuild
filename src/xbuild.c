@@ -27,7 +27,10 @@ int main(int argc,char *argv[]) {
 
     printf("argv[0]:%s\n ", argv[0]);
     
-    dirname(realpath(argv[0], mypath));
+    memset(mypath, 0x0, sizeof(mypath));
+
+    readlink("/proc/self/exe",
+	     mypath,sizeof(mypath) - 1);
     appdir = mypath;
     printf("appdir: %s\n", appdir);
     
