@@ -27,7 +27,8 @@ int main(int argc,char *argv[]) {
 
     printf("argv[0]:%s\n ", argv[0]);
     
-    appdir = dirname(realpath(argv[0], mypath));
+    dirname(realpath(argv[0], mypath));
+    appdir = mypath;
     printf("appdir: %s\n", appdir);
     
     sprintf(pathenv,"PATH=%s:%s",
