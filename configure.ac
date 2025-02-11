@@ -4,6 +4,7 @@ AC_INIT([xbuild], [1.0], [rongsong.shen@gmail.com])  # Project info
 AM_INIT_AUTOMAKE([foreign])  # Use Automake in 'foreign' mode (no strict requirements)
 
 # Check for necessary tools (optional)
+AC_PROG_CC
 AC_PROG_INSTALL  # Ensure 'install' command is available
 
 # Output the configuration for the Makefile
