@@ -54,7 +54,8 @@ int main(int argc,char *argv[]) {
     }
 
     appdir = getenv("APPDIR");
-
+    printf("appdir: %s\n", appdir);
+    
     if (appdir == NULL) {
 	memset(mypath, 0x0, sizeof(mypath));
 	readlink("/proc/self/exe",
