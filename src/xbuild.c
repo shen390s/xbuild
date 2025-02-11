@@ -18,6 +18,7 @@ int main(int argc,char *argv[]) {
     char *appdir;
     char pathenv[MAX_ENV_LEN];
     char appbasenv[MAX_ENV_LEN];
+    char efile[MAX_PATH_LEN];
 
     if (argc < 2) {
 	usage(argv[0]);
@@ -32,9 +33,11 @@ int main(int argc,char *argv[]) {
     putenv(pathenv);
     putenv(appbasenv);
     
-    printf("I will exec %s\n", argv[1]);
+    sprintf(efile,"%s/%s",
+	    appdir, argv[1]);
+    printf("I will exec %s\n", efile);
     
-    if (execvp(argv[1], &argv[1]) < 0) {
+    if (execvp(efile, &argv[1]) < 0) {
 	perror("execv");
 	return -1;
     }
