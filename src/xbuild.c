@@ -17,9 +17,9 @@ static void usage(char *prog) {
 
 int main(int argc,char *argv[]) {
     char *appdir = NULL;
-    char *top = NULL;
-    char mypath[MAX_PATH_LEN];
+    char *dir = NULL;
     char appRun[MAX_PATH_LEN];
+    char mypath[MAX_PATH_LEN];
     char pathenv[MAX_ENV_LEN];
     char appbasenv[MAX_ENV_LEN];
     char efile[MAX_PATH_LEN];
@@ -41,20 +41,22 @@ int main(int argc,char *argv[]) {
     memset(mypath, 0x0, sizeof(mypath));
     readlink(appRun, mypath, sizeof(mypath) - 1);
 
-    appdir = dirname(mypath);
+    dir = dirname(mypath);
     printf("mypath: %s\n", mypath);
-    printf("appdir: %s\n", appdir);
+    printf("appdir: %s\n", dir);
     
-    sprintf(pathenv,"PATH=%s:%s",
-	    appdir, getenv("PATH"));
-    sprintf(appbasenv,"APP_BASE=%s/..",
-	    appdir);
+    sprintf(pathenv,"PATH=%s/%s:%s",
+	    appdir, dir, getenv("PATH"));
+    sprintf(appbasenv,"APP_BASE=%s/%s/..",
+	    appdir, dir);
 
     putenv(pathenv);
     putenv(appbasenv);
     
-    sprintf(efile,"%s/%s",
-	    appdir, argv[1]);
+    sprintf(efile,"%s/%s/%s",
+	    appdir, dir,argv[1]);
+    
+    printf("efile: %s\n", efile);
     
     if (execvp(efile, &argv[1]) < 0) {
 	perror("execv");
