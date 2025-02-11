@@ -35,15 +35,12 @@ int main(int argc,char *argv[]) {
 	return -1;
     }
     
-    printf("appdir: %s\n", appdir);
     sprintf(appRun,"%s/AppRun", appdir);
     
     memset(mypath, 0x0, sizeof(mypath));
     readlink(appRun, mypath, sizeof(mypath) - 1);
 
     dir = dirname(mypath);
-    printf("mypath: %s\n", mypath);
-    printf("appdir: %s\n", dir);
     
     sprintf(pathenv,"PATH=%s/%s:%s",
 	    appdir, dir, getenv("PATH"));
@@ -55,8 +52,6 @@ int main(int argc,char *argv[]) {
     
     sprintf(efile,"%s/%s/%s",
 	    appdir, dir,argv[1]);
-    
-    printf("efile: %s\n", efile);
     
     if (execvp(efile, &argv[1]) < 0) {
 	perror("execv");
