@@ -1,4 +1,15 @@
 #!/bin/bash
 
-echo "Hello from my shell script!"
+APPDIR=$(dirname $(readlink -f "$0"))
+PATH="$APPDIR/../bin:$PATH"
+export PATH
+
+if [ $# -lt 1 ]; then
+    echo xbuild command ...
+    exit 1
+fi
+
+shift
+
+exec "$@"
 
