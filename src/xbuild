@@ -4,12 +4,17 @@ APPDIR=$(dirname $(readlink -f "$0"))
 PATH="$APPDIR/../bin:$PATH"
 export PATH
 
-if [ $# -lt 1 ]; then
-    echo xbuild command ...
+APP_BASE_DIR=$APPDIR
+export APP_BASE_DIR
+
+if [ $# -lt 2 ]; then
+    echo xbuild app args_for_app ...
     exit 1
 fi
 
-shift
+APP="$1"
 
-exec "$@"
+shift 1
+
+exec "$APP" "$@"
 
