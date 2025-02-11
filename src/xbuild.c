@@ -32,6 +32,8 @@ int main(int argc,char *argv[]) {
     putenv(pathenv);
     putenv(appbasenv);
     
+    printf("I will exec %s\n", argv[1]);
+    
     if (execvp(argv[1], &argv[1]) < 0) {
 	perror("execv");
 	return -1;
