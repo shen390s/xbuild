@@ -15,30 +15,6 @@ static void usage(char *prog) {
     return;
 }
 
-char *topdir(char *path) {
-    char dir[MAX_PATH_LEN];
-
-    strcpy(dir, path);
-    while(1) {
-	char filename[MAX_PATH_LEN];
-	struct stat sbuf;
-	char *p;
-
-	sprintf(filename,"%s/AppRun", dir);
-	if (stat(filename, &sbuf) >= 0) {
-	    return strdup(dir);
-	}
-
-	p = strrchr(dir, '/');
-	if (p == NULL) {
-	    break;
-	}
-	*p = 0x0;
-    }
-
-    return NULL;
-}
-
 int main(int argc,char *argv[]) {
     char *appdir = NULL;
     char *top = NULL;
@@ -54,28 +30,20 @@ int main(int argc,char *argv[]) {
     }
 
     appdir = getenv("APPDIR");
-    printf("appdir: %s\n", appdir);
-    
     if (appdir == NULL) {
-	memset(mypath, 0x0, sizeof(mypath));
-	readlink("/proc/self/exe",
-		 mypath,sizeof(mypath) - 1);
-	appdir = dirname(mypath);
-    }
-    
-    top = topdir(appdir);
-
-    if (top == NULL) {
-	fprintf(stderr, "can not find top dir\n");
+	fprintf(stderr, "no appdir defined\n");
 	return -1;
     }
     
-    sprintf(appRun,"%s/AppRun", top);
+    printf("appdir: %s\n", appdir);
+    sprintf(appRun,"%s/AppRun", appdir);
     
     memset(mypath, 0x0, sizeof(mypath));
     readlink(appRun, mypath, sizeof(mypath) - 1);
 
     appdir = dirname(mypath);
+    printf("mypath: %s\n", mypath);
+    printf("appdir: %s\n", appdir);
     
     sprintf(pathenv,"PATH=%s:%s",
 	    appdir, getenv("PATH"));
