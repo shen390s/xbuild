@@ -10,13 +10,13 @@ fix_gcc() {
     fi
 
     _v=$(gcc --version | grep GCC | awk '{print $3}')
-    _cc1=$(find $APPDIR -name cc1 |grep gcc |grep $_v)
+    _cc1=$(find $APPDIR -name cc1 |grep gcc |grep $_v | head -n 1)
 
     if [ "x$_cc1" = "x" ]; then
 	return
     fi
     
-    _lib=$(find $APPDIR -name crt1.o |grep gcc |grep $_v)
+    _lib=$(find $APPDIR -name crt1.o |grep gcc |grep $_v | head -n 1)
     if [ "x$_lib" = "x" ]; then
 	return
     fi
