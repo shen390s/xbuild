@@ -20,9 +20,8 @@ int main(int argc,char *argv[]) {
     char *dir = NULL;
     char appRun[MAX_PATH_LEN];
     char mypath[MAX_PATH_LEN];
-    char pathenv[MAX_ENV_LEN];
-    char appbasenv[MAX_ENV_LEN];
     char efile[MAX_PATH_LEN];
+    char xbuildenv[MAX_PATH_LEN];
 
     if (argc < 2) {
 	usage(argv[0]);
@@ -42,18 +41,15 @@ int main(int argc,char *argv[]) {
 
     dir = dirname(mypath);
     
-    sprintf(pathenv,"PATH=%s/%s:%s",
-	    appdir, dir, getenv("PATH"));
-    sprintf(appbasenv,"APP_BASE=%s/%s/..",
+    sprintf(xbuildenv,"XBUILD_DIR=%s/%s",
+	    appdir,dir);
+    putenv(xbuildenv);
+    
+    sprintf(efile,"%s/%s/../libexec/xrun",
 	    appdir, dir);
-
-    putenv(pathenv);
-    putenv(appbasenv);
     
-    sprintf(efile,"%s/%s/%s",
-	    appdir, dir,argv[1]);
-    
-    if (execvp(efile, &argv[1]) < 0) {
+    argv[0] = efile;
+    if (execvp(efile, argv) < 0) {
 	perror("execv");
 	return -1;
     }

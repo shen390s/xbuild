@@ -1,0 +1,29 @@
+#!/bin/sh
+
+fix_gcc() {
+    local _gcc _v _cc1
+
+    _gcc=$(which gcc 2>/dev/null)
+
+    if [ "x$_gcc" = "x" ]; then
+	return
+    fi
+
+    _v=$(gcc --version | grep GCC | awk '{print $3}')
+    _cc1=$(find $APPDIR -name cc1 |grep gcc |grep $_v)
+
+    if [ "x$_cc1" = "x" ]; then
+	return
+    fi
+    
+    COMPILER_PATH=$(dirname $_cc1)
+    export COMPILER_PATH
+}
+MYDIR="$(dirname $(realpath $0))"
+
+PATH="$XBUILD_DIR:$PATH"
+export PATH
+
+fix_gcc
+
+exec "$@"
