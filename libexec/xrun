@@ -26,7 +26,6 @@ fix_gcc() {
     LIBRARY_PATH=$(dirname $_lib)
     export LIBRARY_PATH
 }
-MYDIR="$(dirname $(realpath $0))"
 
 PATH="$XBUILD_DIR:$PATH"
 export PATH
