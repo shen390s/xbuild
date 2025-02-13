@@ -29,6 +29,8 @@ fix_gcc() {
 
 PATH="$XBUILD_DIR:$PATH"
 export PATH
+LD_LIBRARY_PATH="$XBUILD_DIR/../lib:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH
 
 fix_gcc
 
