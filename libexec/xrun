@@ -23,14 +23,14 @@ fix_gcc() {
     
     COMPILER_PATH=$(dirname $_cc1)
     export COMPILER_PATH
-#    LIBRARY_PATH=$(dirname $_lib)
-#    export LIBRARY_PATH
+    LIBRARY_PATH=$(dirname $_lib)
+    export LIBRARY_PATH
 }
 
 PATH="$XBUILD_DIR:$PATH"
 export PATH
-LD_LIBRARY_PATH="$XBUILD_DIR/../lib:$LD_LIBRARY_PATH"
-export LD_LIBRARY_PATH
+# LD_LIBRARY_PATH="$XBUILD_DIR/../lib:$LD_LIBRARY_PATH"
+# export LD_LIBRARY_PATH
 
 fix_gcc
 
