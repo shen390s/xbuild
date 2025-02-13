@@ -23,8 +23,8 @@ fix_gcc() {
     
     COMPILER_PATH=$(dirname $_cc1)
     export COMPILER_PATH
-    LIBRARY_PATH=$(dirname $_lib)
-    export LIBRARY_PATH
+#    LIBRARY_PATH=$(dirname $_lib)
+#    export LIBRARY_PATH
 }
 
 PATH="$XBUILD_DIR:$PATH"
