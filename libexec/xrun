@@ -27,11 +27,24 @@ fix_gcc() {
     export LIBRARY_PATH
 }
 
+set_pkg_path() {
+    local _path
+
+    _path=$(find $APPDIR -name "*.pc" | \
+		xargs -n 1 dirname | \
+		sort |\
+		uniq | \
+		xargs echo | \
+		sed -e 's/ /:/g')
+    PKG_CONFIG_PATH="$_path"
+    export PKG_CONFIG_PATH
+}
 PATH="$XBUILD_DIR:$PATH"
 export PATH
 # LD_LIBRARY_PATH="$XBUILD_DIR/../lib:$LD_LIBRARY_PATH"
 # export LD_LIBRARY_PATH
 
 fix_gcc
+set_pkg_path
 
 exec "$@"
