@@ -15,6 +15,51 @@ static void usage(char *prog) {
     return;
 }
 
+static char *executable_find(const char *filename) {
+    char *path_env = getenv("PATH");
+    char *path_copy;
+    char *dir;
+    char *p = NULL;
+
+    if (path_env == NULL) {
+	return NULL;
+    }
+
+    path_copy = strdup(path_env);
+    if (path_copy == NULL) {
+	perror("strdup");
+	
+	return NULL;
+    }
+
+    dir = strtok(path_copy, ":");
+    while (dir != NULL) {
+	char full_path[40960];
+	char *p = NULL;
+
+	snprintf(full_path,sizeof(full_path) - 1, "%s/%s", dir, filename);
+	if (access(full_path, X_OK) == 0) {
+	    p = strdup(full_path);
+	    break;
+	}
+
+	dir = strtok(NULL, ":");
+    }
+
+    free(path_copy);
+    return p;
+}
+
+static char *exec_file(char *filename) {
+    char *p;
+
+    p = basename(filename);
+    if (p == NULL) {
+	return NULL;
+    }
+
+    return executable_find(p);
+}
 int main(int argc,char *argv[]) {
     char *appdir = NULL;
     char *dir = NULL;
@@ -45,12 +90,28 @@ int main(int argc,char *argv[]) {
 		appdir, dir);
     }
     else {
-	appdir = realpath(dirname(argv[0]), NULL);
-	sprintf(xbuildenv, "XBUILD_DIR=%s/..",
-		appdir);
+	char fullpath[PATH_MAX];
+	
+	if (strchr(argv[0], '/') == NULL) {
+	    char *execfilename = exec_file(argv[0]);
+	    appdir = dirname(execfilename);
+	    free(execfilename);
+	
+	    realpath(appdir, fullpath);
+	}
+	else {
+	    getcwd(mypath, sizeof(mypath) - 1);
+	    snprintf(fullpath, sizeof(fullpath) - 1,
+		     "%s/%s", mypath, argv[0]);
+	    appdir = dirname(fullpath);
+	    realpath(appdir, fullpath);
+	}
+	
+	sprintf(xbuildenv, "XBUILD_DIR=%s",
+		fullpath);
 	putenv(xbuildenv);
 	sprintf(efile, "%s/../libexec/xrun",
-		appdir);
+		fullpath);
     }
 
     if (access(efile, X_OK) < 0) {
