@@ -29,24 +29,34 @@ int main(int argc,char *argv[]) {
     }
 
     appdir = getenv("APPDIR");
-    if (appdir == NULL) {
-	fprintf(stderr, "no appdir defined\n");
+    if (appdir != NULL) {
+	sprintf(appRun,"%s/AppRun", appdir);
+    
+	memset(mypath, 0x0, sizeof(mypath));
+	readlink(appRun, mypath, sizeof(mypath) - 1);
+
+	dir = dirname(mypath);
+    
+	sprintf(xbuildenv,"XBUILD_DIR=%s/%s",
+		appdir,dir);
+	putenv(xbuildenv);
+    
+	sprintf(efile,"%s/%s/../libexec/xrun",
+		appdir, dir);
+    }
+    else {
+	appdir = realpath(dirname(argv[0]), NULL);
+	sprintf(xbuildenv, "XBUILD_DIR=%s/..",
+		appdir);
+	putenv(xbuildenv);
+	sprintf(efile, "%s/../libexec/xrun",
+		appdir);
+    }
+
+    if (access(efile, X_OK) < 0) {
+	perror("access");
 	return -1;
     }
-    
-    sprintf(appRun,"%s/AppRun", appdir);
-    
-    memset(mypath, 0x0, sizeof(mypath));
-    readlink(appRun, mypath, sizeof(mypath) - 1);
-
-    dir = dirname(mypath);
-    
-    sprintf(xbuildenv,"XBUILD_DIR=%s/%s",
-	    appdir,dir);
-    putenv(xbuildenv);
-    
-    sprintf(efile,"%s/%s/../libexec/xrun",
-	    appdir, dir);
     
     argv[0] = efile;
     if (execvp(efile, argv) < 0) {

@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if [ "x$DEBUG" = "xyes" ]; then
+    set -x
+fi
+
 fix_gcc() {
     local _gcc _v _cc1 _lib
 
@@ -28,10 +32,14 @@ fix_gcc() {
 }
 
 set_pkg_path() {
-    local _path
+    local _path _dir
 
-    _path=$(find $APPDIR -name "*.pc" | \
-		xargs -n 1 dirname | \
+    _dir="$APPDIR"
+    if [ -z "$_dir" ]; then
+	_dir="$XBUILD_DIR/.."
+    fi
+
+    _path=$(find $_dir -name "*.pc" -exec dirname {} \;| \
 		sort |\
 		uniq | \
 		xargs echo | \
@@ -44,7 +52,10 @@ export PATH
 # LD_LIBRARY_PATH="$XBUILD_DIR/../lib:$LD_LIBRARY_PATH"
 # export LD_LIBRARY_PATH
 
-fix_gcc
+if [ ! -z "$APPDIR" ]; then
+    fix_gcc
+fi
+
 set_pkg_path
 
 exec "$@"
