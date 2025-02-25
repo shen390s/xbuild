@@ -47,6 +47,25 @@ set_pkg_path() {
     PKG_CONFIG_PATH="$_path"
     export PKG_CONFIG_PATH
 }
+
+fix_pkg_path_hwloc() {
+    local _f _path
+    
+    if pkg-config --cflags hwloc 2>&1 >/dev/null; then
+	return
+    fi
+
+    _f=$(ldd $(which hwloc-info) 2>/dev/null| grep libhwloc | awk '{ print $3}')
+    if [ -z "$_f" ]; then
+	echo no hwloc found
+	return
+    fi
+
+    _path=$(dirname "$_f")/pkgconfig
+    PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$_path"
+    export PKG_CONFIG_PATH
+}
+
 PATH="$XBUILD_DIR:$PATH"
 export PATH
 # LD_LIBRARY_PATH="$XBUILD_DIR/../lib:$LD_LIBRARY_PATH"
@@ -57,5 +76,7 @@ if [ ! -z "$APPDIR" ]; then
 fi
 
 set_pkg_path
+
+fix_pkg_path_hwloc
 
 exec "$@"
