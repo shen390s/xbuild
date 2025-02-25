@@ -18,6 +18,8 @@ static int debug = 0;
     }                                                                          \
   } while (0)
 
+#define XSTRING(p) (((p) != NULL? (p):"null"))
+
 static void usage(char *prog) {
   fprintf(stderr, "%s app app_args ...\n", prog);
   return;
@@ -61,7 +63,7 @@ static char *executable_find(const char *filename) {
     dir = strtok(NULL, ":");
   }
 
-  DEBUG("found: %p\n", p);
+  DEBUG("found: %s\n", XSTRING(p));
   
   free(path_copy);
   return p;
@@ -101,7 +103,7 @@ int main(int argc, char *argv[]) {
   
   appdir = getenv("APPDIR");
 
-  DEBUG("appdir: %s\n", appdir);
+  DEBUG("appdir: %s\n", XSTRING(appdir));
   
   if (appdir != NULL) {
     sprintf(appRun, "%s/AppRun", appdir);
@@ -127,15 +129,8 @@ int main(int argc, char *argv[]) {
 
       DEBUG("exec filename: %s\n", execfilename);
       
-      appdir = dirname(execfilename);
-
-      DEBUG("appdir: %s\n", appdir);
+      strcpy(fullpath, execfilename);
       
-      memset(fullpath, 0x0, sizeof(fullpath));
-
-      realpath(appdir, fullpath);
-
-      DEBUG("fullpath: %s\n", fullpath);
       free(execfilename);
     } else {
       if (argv[0][0] != '/') {
@@ -146,18 +141,15 @@ int main(int argc, char *argv[]) {
       }
 
       DEBUG("fullpath: %s\n", fullpath);
-      
-      appdir = dirname(fullpath);
-
-      DEBUG("appdir: %s\n", appdir);
-      
-      realpath(appdir, fullpath);
-      DEBUG("fullpath: %s\n", fullpath);
     }
 
-    sprintf(xbuildenv, "XBUILD_DIR=%s", fullpath);
+    appdir = dirname(fullpath);
+
+    DEBUG("appdir: %s\n", appdir);
+    
+    sprintf(xbuildenv, "XBUILD_DIR=%s", appdir);
     putenv(xbuildenv);
-    sprintf(efile, "%s/../libexec/xrun", fullpath);
+    sprintf(efile, "%s/../libexec/xrun", appdir);
   }
 
   DEBUG("efile: %s\n", efile);
