@@ -32,19 +32,10 @@ fix_gcc() {
 }
 
 set_pkg_path() {
-    local _path _dir
+    local _path 
 
-    _dir="$APPDIR"
-    if [ -z "$_dir" ]; then
-	_dir="$XBUILD_DIR/.."
-    fi
-
-    _path=$(find $_dir -name "*.pc" -exec dirname {} \;| \
-		sort |\
-		uniq | \
-		xargs echo | \
-		sed -e 's/ /:/g')
-    PKG_CONFIG_PATH="$_path"
+    _path="$(dirname $(which xbuild | sed -e 's@^.*/gnu/@/gnu/@g'))/../lib"
+    PKG_CONFIG_PATH="$_path/pkgconfig"
     export PKG_CONFIG_PATH
 }
 
