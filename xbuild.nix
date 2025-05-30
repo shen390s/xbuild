@@ -17,5 +17,6 @@ stdenv'.mkDerivation {
   pname = "xbuild";
   inherit version src;
   nativeBuildInputs = [ autoreconfHook ];
+  depsTargetTarget = [ bash ];
   doCheck = true;
 }
