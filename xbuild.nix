@@ -1,4 +1,4 @@
-{ stdenv, nixpkgs, buildPackages, autoreconfHook, version, src, overrideCC }:
+{ stdenv, buildPackages, autoreconfHook, version, src, overrideCC }:
 let
   # on windows we use win32 threads to get a fully static binary
   gcc = buildPackages.wrapCC (buildPackages.gcc-unwrapped.override ({
@@ -17,6 +17,6 @@ stdenv'.mkDerivation {
   pname = "xbuild";
   inherit version src;
   nativeBuildInputs = [ autoreconfHook ];
-  depsTargetTarget = [ nixpkgs.bash ];
+#  depsTargetTarget = [ nixpkgs.bash ];
   doCheck = true;
 }
