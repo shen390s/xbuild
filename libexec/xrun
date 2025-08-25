@@ -34,6 +34,10 @@ fix_gcc() {
 set_pkg_path() {
     local _path 
 
+    if [ "X$AUTO_DETECT_PKG_CONFIG_PATH" = "Xno" ]; then
+        return
+    fi
+
     _path="$(dirname $(which xbuild | sed -e 's@^.*/gnu/@/gnu/@g'))/../lib"
     PKG_CONFIG_PATH="$_path/pkgconfig"
     export PKG_CONFIG_PATH
