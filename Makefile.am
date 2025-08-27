@@ -1,6 +1,6 @@
 # Makefile.am
-bin_PROGRAMS = xbuild  # 
-xbuild_SOURCES = src/xbuild.c
+bin_PROGRAMS = bin/xbuild  # 
+bin_xbuild_SOURCES = src/xbuild.c
 
 libexec_SCRIPTS = libexec/xrun
 
