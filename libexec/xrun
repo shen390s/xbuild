@@ -74,6 +74,8 @@ set_pkg_path
 
 fix_pkg_path_hwloc
 
+export SHELL=$XBUILD_SHELL
+
 if [ "X$1" = "Xshell" ]; then
     exec $XBUILD_SHELL
 else
