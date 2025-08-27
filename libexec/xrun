@@ -4,6 +4,8 @@ if [ "x$DEBUG" = "xyes" ]; then
     set -x
 fi
 
+APP=$(realpath $0)
+
 fix_gcc() {
     local _gcc _v _cc1 _lib
 
@@ -74,10 +76,15 @@ set_pkg_path
 
 fix_pkg_path_hwloc
 
+if [ "X$XBUILD_SHELL" = "X" ]; then
+    XBUILD_SHELL=$(cat $APP |head -n1 |sed -e 's@^#![ ]*@@g')
+    export XBUILD_SHELL
+fi
+
 export SHELL=$XBUILD_SHELL
 
 if [ "X$1" = "Xshell" ]; then
-    exec $XBUILD_SHELL
+    exec $SHELL
 else
     exec "$@"
 fi
